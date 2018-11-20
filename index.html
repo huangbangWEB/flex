@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="css/publish.css"/>
+		<link rel="stylesheet" type="text/css" href="css/dynamicStyle.css"/>
+		<link rel="stylesheet" type="text/css" href="css/rangeslider.css"/>
+		<link rel="stylesheet" type="text/css" href="css/demo.css"/>
+		<script src="js/jquery-3.2.1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/publish.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rangeslider.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			function single_target(sheet,attr,value){
+				if(attr == 'order'){
+    				$('#flex-order').val(value);
+    				
+    			}else if(attr == 'flex-grow'){
+    				$('#flex-grow').val(value);
+    				
+    			}else if(attr == 'flex-shrink'){
+					$('#flex-shrink').val(value);
+					
+    			}else if(attr == 'align-self'){
+    				$('#align-self').val('flex-end');
+    				
+    			}else if(attr == 'flex-basis'){
+    				var index;
+    				if((index = value.lastIndexOf('px')) > -1){
+    					$('input[type="range"]', $('#flex-basis-percent').get(0)).val(0).change();
+    					$('#flex-basis .flex-basis-px').val(value.slice(0,index)).change();
+    				}else if((index = value.lastIndexOf('%')) > -1){
+    					$('#flex-basis .flex-basis-px').val('')
+    					 $('input[type="range"]', $('#flex-basis-percent').get(0)).val(value.slice(0,index)).change();
+    				}
+    				
+    			}else if(attr == 'flex'){
+    				var flex = value.split(' '),
+	    				flex_grow = flex[0],
+	    				flex_shrink = flex[1],
+	    				flex_basis = flex[2];
+    				single_target(sheet,'flex-grow',flex_grow);
+    				single_target(sheet,'flex-shrink',flex_shrink);
+    				single_target(sheet,'flex-basis',flex_basis);
+    			}
+			}
+			$(function(){
+				var sheet = select_sheet('dynamicStyle.css');
+				//jq中谷歌的select没有click方法
+				$('#flex-wrap').change(function(e){
+					select_css(sheet,'.flex-wrap','flex-wrap',e.target.value); 
+				});
+				
+				$('#flex-direction').change(function(e){
+					select_css(sheet,'.flex-direction','flex-direction',e.target.value); 
+				});
+				
+				$('#justify-content').change(function(e){
+					select_css(sheet,'.justify-content','justify-content',e.target.value); 
+				});
+				
+				$('#align-items').change(function(e){
+					select_css(sheet,'.align-items','align-items',e.target.value); 
+				});
+				
+				$('#align-content').change(function(e){
+					select_css(sheet,'.align-content','align-content',e.target.value); 
+				});
+				
+				$('#flex-order').on('click keyup',function(e){
+					select_css(sheet,'.box .son:nth-child('+$('#single-target').val()+')','order',e.target.value); 
+				});
+				
+				$('#flex-grow').on('click keyup',function(e){
+	select_css(sheet,'.box .son:nth-child('+$('#single-target').val()+')','flex-grow',e.target.value); 
+				});
+				
+				$('#flex-shrink').on('click keyup',function(e){
+					select_css(sheet,'.box .son:nth-child('+$('#single-target').val()+')','flex-shrink',e.target.value); 
+				});
+				
+				$('#align-self').on('click keyup',function(e){
+					select_css(sheet,'.box .son:nth-child('+$('#single-target').val()+')','align-self',e.target.value); 
+				});
+				$('.flex-basis-px').on('click keyup',function(e){
+					select_css(sheet,'.box .son:nth-child('+$('#single-target').val()+')','flex-basis',e.target.value+'px'); 
+				});
+				//滑块
+				$(document).on('input', '[data-rangeslider]', function(e) {
+			        select_css(sheet,'.box .son:nth-child('+$('#single-target').val()+')','flex-basis',e.target.value+'%');
+			    });
+			    $('#single-target').change(function(e){
+			    	var obj = select_css(sheet,'.box .son:nth-child('+e.target.value+')');
+			    	if(obj_is_null(obj) || (obj['flex-basis'] == 'auto' & obj_len(obj) == 1)){
+			    		$('#flex-order').val('');
+			    		$('#flex-grow').val('');
+			    		$('#flex-shrink').val('');
+			    		$('#align-self').val('flex-start');
+			    		
+			    		$('#flex-basis .flex-basis-px').val('');
+			    		
+				        $('input[type="range"]', $('#flex-basis-percent').get(0)).val(0).change();
+				        select_css(sheet,'.box .son:nth-child('+$('#single-target').val()+')','flex-basis','auto');
+			    	}else{
+			    		$.each(obj,function(attr,value){
+			    			single_target(sheet,attr,value);
+			    		});
+			    	}
+			    })
+			})
+		</script>
+	</head>
+	<body>
+		<div id="main" class="row">
+			<div id="side" class="col-xs-5 col-lg-4">
+				<div>
+					<b>flex-wrap</b> 换行方式
+				</div>
+				<select id="flex-wrap">
+					<option value="nowrap">nowrap 不换行(默认)</option>
+					<option value="wrap">wrap 换行 第一行在上</option>
+					<option value="wrap-reverse">wrap-reverse 换行 第一行在下</option>
+				</select>
+				
+				<br /><br />
+				<div>
+					<b>flex-direction</b> 主轴方向 
+				</div>
+				<select id="flex-direction">
+					<option value="row">row 水平排列(默认)</option>
+					<option value="row-reverse">row-reverse 水平反转排列</option>
+					<option value="column">column 垂直排列</option>
+					<option value="column-reverse">column-reverse 垂直反转排列</option>
+				</select>
+				
+				<br /><br />
+				<div>
+					<b>justify-content</b> 水平对齐方式（内容）
+				</div>
+				<select id="justify-content">
+					<option value="flex-start">flex-start 左对齐(默认)</option>
+					<option value="flex-end">flex-end 右对齐</option>
+					<option value="center">center 水平居中对齐</option>
+					<option value="space-between">space-between 两端对齐 间隔平均分布</option>
+					<option value="space-around">space-around 两侧间隔相等</option>
+				</select>
+				
+				<br /><br />
+				<div>
+					<b>align-items</b> 垂直对齐方式
+				</div>
+				<select id="align-items">
+					<option value="flex-start">flex-start 顶部对齐(默认)</option>
+					<option value="flex-end">flex-end 底部对齐</option>
+					<option value="center">center 垂直居中对齐</option>
+					<option value="stretch">stretch 铺满整个容器高度<red>(*未设置高度或设为auto)</red></option>
+				</select>
+				<br /><br />
+				
+				<div>
+					<b>align-content</b> 垂直对齐方式（内容）
+				</div>
+				<select id="align-content">
+					<option value="stretch">stretch 铺满整个容器高度(默认)</option>
+					<option value="flex-start">flex-start 顶部对齐</option>
+					<option value="flex-end">flex-end 底部对齐</option>
+					<option value="center">center 垂直居中对齐</option>
+					<option value="space-between">space-between 两端对齐 间隔平均分布</option>
+					<option value="space-around">space-around 两侧间距相等</option>
+				</select>
+				<br /><br />
+				
+				<div id="single">
+					<b>目标：</b>
+					<select id="single-target">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+					</select>
+	
+					<br /><br />
+					<div>
+						<b>order</b> 排列顺序
+						<br>数值越小，排列越靠前，默认为0
+					</div>
+					<input type="number" id="flex-order" value="" placeholder="order" style="width: 100px;"/>
+					
+					<br /><br />
+					<div>
+						<b>flex-grow</b> 放大比例
+						<br>1.<red>有多余的空间才进行扩展</red>
+						<br>2.所有项目默认为1
+						<br>3.当设置为0时，即使存在扩展空间也不扩展
+					</div>
+					<input type="number" id="flex-grow" value="" placeholder="flex-grow" style="width: 100px;"/>
+					
+					<br /><br />
+					<div>
+						<b>flex-shrink</b> 缩小比例
+						<br>1.<red>所有项目默认为1，即如果空间不足，都将等比例缩小</red>
+						<br>2.如果当前为0，其他为1，则空间不足时，前者不缩小
+						<br>3.负值无效
+					</div>
+					<input type="number" id="flex-shrink" value="" placeholder="flex-shrink" style="width: 100px;"/>
+					
+					<br /><br />
+					<div>
+						<b>align-self</b> 单个元素的垂直对齐方式
+					</div>
+					<select id="align-self">
+						<option value="flex-start">flex-start 顶部对齐(默认)</em></option>
+						<option value="flex-end">flex-end 底部对齐</option>
+						<option value="center">center 垂直居中对齐</option>
+						<option value="stretch">stretch 铺满整个容器高度<red>(*未设置高度或设为auto)</red></option>
+					</select>
+					
+					<br /><br />
+					<div id="flex-basis">
+						<b>flex-basis</b> 初始长度
+						<br />
+						方式一: <input type="number" value="" class="flex-basis-px" style="width: 60px;"/> px
+						<br />
+						方式二:
+						<div id="flex-basis-percent">
+					        <input type="range" min="0" max="100" value="0" data-rangeslider>
+					        <output></output>
+					    </div>
+					</div>
+					
+				</div>
+			</div>
+				
+				<div id="demo" class="col-xs-7  col-lg-8">
+					<div class="box flex flex-direction flex-wrap justify-content align-items align-content">
+						<div value="1" class="son">1</div>
+						<div value="2" class="son">2</div>
+						<div value="3" class="son">3</div>
+						<div value="4" class="son">4</div>
+						<div value="5" class="son">5</div>
+						<div value="6" class="son">6</div>
+						<div value="1" class="son">7</div>
+						<div value="2" class="son">8</div>
+						<div value="3" class="son">9</div>
+						<div value="4" class="son">10</div>
+						<div value="5" class="son">11</div>
+						<div value="6" class="son">12</div>
+					</div>
+				</div>
+		</div>
+		
+		
+	</body>
+</html>

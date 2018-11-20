@@ -1,0 +1,47 @@
+body{
+	padding: 20px;
+}
+#main{
+	border: solid 1px black;
+	
+}
+#single{
+	border: solid 1px salmon;
+	padding: 10px;
+}
+#side{
+	border: solid 1px black;
+	min-height: 1000px;
+	padding-left: 20px;
+	padding-top: 10px;
+}
+#demo{
+	border: solid 1px black;
+	min-height: 1000px;
+	padding-top: 10px;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.box{
+	width: 500px;
+	height: 500px;
+	border: solid 1px black;
+	background-color: gray;
+}
+.box div{
+	width: 100px;
+	height: 100px;
+	line-height: 100px;
+	border: solid 1px black;
+	background-color: salmon;
+	text-align: center;
+	box-sizing: border-box;
+	font-size: 50px;
+}
+/*盒模型初始化*/
+.flex{
+	display: -webkit-flex;
+	display: flex;
+}

@@ -1,0 +1,41 @@
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft YaheiUI", "Microsoft YaHei", SimHei, "\5B8B\4F53", simsun, sans-serif;
+}
+div{
+	outline: none;	
+}
+.media{
+	margin-top: 0;
+}
+red{
+	color: red;
+}
+/*flex盒模型*/
+.flex{
+	display: -webkit-flex;
+	display: flex;
+}
+/*超出显示冒号*/
+.text-over-ellipsis{
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+/*滤镜*/
+.filter{
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.7);
+}
+/*画圆*/
+.circle_icon{
+	background: rgb();
+	color: #fff;
+	border-radius: 50%;
+	text-align: center;
+}
+/*避免页面的滚动天出现影响布局*/
+html,.navbar-fixed-top {
+    width:100vw;
+    overflow-x:hidden;
+}
